@@ -2,7 +2,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.File;
 public class CharacterGenerator { 
     //  quickSort
     //
@@ -101,6 +103,28 @@ public class CharacterGenerator {
             return -1;
         }
 
+        public static String getStringFromUser(BufferedReader br) {
+            try {
+                String input = br.readLine();
+                return input; 
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
+            } return "Error with input.";
+        }
+
+        public static void printCharacter(StringBuilder message, String characterName) {
+            try {
+                BufferedWriter writer = new BufferedWriter(new FileWriter("./characters/" + characterName + ".txt"));
+                writer.write(message.toString());
+                writer.close();
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
+            } catch (IndexOutOfBoundsException ioobe) {
+                ioobe.printStackTrace();
+            }
+            System.out.println("Thank you for using my character generator. You will find your character at this program's sub directory, under ./characters/"
+            + characterName + ".txt");
+        }
         // This swap is actually more efficient than a XOR swap, because the math is performed as the variables are loaded.
         // The traditional XOR swap must be executed sequentially, 
         // wherein the program loads each individual number into memory before performing math on them.
@@ -139,7 +163,6 @@ public class CharacterGenerator {
         listOfRaces.add(new Race("Goliath"));
         listOfRaces.add(new Race("Grung"));
         listOfRaces.add(new Race("Half Orc", 2, 0, 1, 0, 0, 0, "Darkvision, Menacing, Relentless Endurance, Savage Attacks"));
-        //TODO (Preston Bethany): Half-Elves get 2 separate floating stat bonuses of + 1 to be chosen by the user.
         listOfRaces.add(new Race("Half Elf", 0, 0, 0, 0, 0, 2, "Darkvision, Fey Ancestry, Skill Versatility"));
         listOfRaces.add(new Race("Halfling", 0, 2, 0, 0 , 0, 0, "Lucky, Brave, Halfling Nimbleness"));
         listOfRaces.add(new Race("Hobgoblin"));
@@ -189,13 +212,8 @@ public class CharacterGenerator {
     public static void main(String[] args) {
         
         System.out.print("Please input your character's name: ");
-        String characterName = null;
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        try {
-            characterName = br.readLine();
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        } 
+        String characterName = getStringFromUser(br);
         if (characterName != null) {
             System.out.println("Your name is " + characterName);
             CharacterInfo theCharacter = new CharacterInfo();
@@ -214,13 +232,14 @@ public class CharacterGenerator {
             System.out.print("Your first roll is " + coreStats[0] + "\n" + "Your second roll is " + coreStats[1] + "\n" + "Your third roll is " +
                     coreStats[2] + "\n" + "Your fourth roll is " + coreStats[3] + "\n" + "Your fifth roll is " + coreStats[4] + "\n" +
                     "Your sixth roll is " + coreStats[5] + "\n Please prioritize your stats by entering a number \"1\" through \"6\" in the following fields.\nStrength priority: ");
-            int strengthInput = 0;
-            int dexterityInput = 0;
-            int constitutionInput = 0;
-            int intelligenceInput = 0;
-            int wisdomInput = 0;
-            int charismaInput = 0;
+
             for(;;) {
+                int strengthInput = 0;
+                int dexterityInput = 0;
+                int constitutionInput = 0;
+                int intelligenceInput = 0;
+                int wisdomInput = 0;
+                int charismaInput = 0;
                 strengthInput = getIntFromUser(br);
                 if (strengthInput > 0 && strengthInput < 7) {
                     switch (strengthInput) {
@@ -333,14 +352,14 @@ public class CharacterGenerator {
                                             break;
                                         }
                                         break; //Exits loop only once all priorities have been entered correctly.
-                                    }//if (charismaInput...
-                                }//if (wisdomInput...
-                            }//if (intelligenceInput...
-                        }//if (constitutionInput...
-                    }//if (dexterityInput...
-                }//if (strengthInput > 0 && strengthInput < 7)
+                                    }//end if (charismaInput...
+                                }//end if (wisdomInput...
+                            }//end if (intelligenceInput...
+                        }//end if (constitutionInput...
+                    }//end if (dexterityInput...
+                }//end if (strengthInput...
                 System.out.print("Priorities entered incorrectly. Try again.\nStrength priority: ");
-            }//while (!prioritySet)
+            }//end of stat priority for loop scope.
             System.out.print("Your strength is " + theCharacter.strength + "\nYour dexterity is " + theCharacter.dexterity + "\nYour constitution is " + theCharacter.constitution +
             "\nYour intelligence is " + theCharacter.intelligence + "\nYour wisdom is " + theCharacter.wisdom +  "\nYour charisma is " + theCharacter.charisma);
 
@@ -355,41 +374,125 @@ public class CharacterGenerator {
                     theCharacter.race = listOfRaces.get(userChoice);
                     break;
                 }
-                System.out.print("That was not a number associated with a race.\nType here: ");
+                System.out.print("\nThat was not a number associated with a race.\nType here: ");
             }
 
             if (theCharacter.race != null) {
+                if (theCharacter.race.name == "Half Elf") {
+                    System.out.print("\nHalf elves get 2 separate floating stat bonuses of + 1.\nWhere would you like to place them?\n1- Strength\n2- Dexterity"
+                    + "\n3- Constitution\n4- Intelligence\n5- Wisdom\n6- Charisma\n");
+                    for(;;) {
+                        System.out.print("Type here: ");
+                        int statNum = getIntFromUser(br);
+                        if(statNum == 1 && theCharacter.race.strengthBonus != 1){
+                            System.out.print("You have selected Strength. Please pick one more stat or hit enter.\n");
+                            theCharacter.race.strengthBonus = 1;
+                        } else if(statNum == 2 && theCharacter.race.dexterityBonus != 1){
+                            System.out.print("You have selected Dexterity. Please pick one more stat or hit enter.\n");
+                            theCharacter.race.dexterityBonus = 1;
+                        } else if(statNum == 3 && theCharacter.race.constitutionBonus != 1){
+                            System.out.print("You have selected Constitution. Please pick one more stat or hit enter.\n");
+                            theCharacter.race.constitutionBonus = 1;
+                        } else if(statNum == 4 && theCharacter.race.intelligenceBonus != 1){
+                            System.out.print("You have selected Intelligence. Please pick one more stat or hit enter. \n");
+                            theCharacter.race.intelligenceBonus = 1;
+                        } else if(statNum == 5 && theCharacter.race.wisdomBonus != 1){
+                            System.out.print("You have selected Wisdom. Please pick one more stat or hit enter.\n");
+                            theCharacter.race.wisdomBonus = 1;
+                        } else {
+                            System.out.print("That selection is invalid. Please Try again.\n");
+                        }
+                        if(theCharacter.race.strengthBonus + theCharacter.race.dexterityBonus + theCharacter.race.constitutionBonus + theCharacter.race.intelligenceBonus + theCharacter.race.wisdomBonus == 2){
+                            break;
+                        }
+                    }//end of loop to set stat bonuses.
+                }//end if (theCharacter.race.name == "Half Elf")
                 message.replace(0, message.length(), "The race " + theCharacter.race.name + " gains the following ability score bonuses.");
                 if (theCharacter.race.strengthBonus != 0) {
                     message.append("\n").append("+").append(theCharacter.race.strengthBonus).append(" to strength.");
+                    theCharacter.strength += theCharacter.race.strengthBonus;
                 }
                 if (theCharacter.race.dexterityBonus != 0) {
                     message.append("\n").append("+").append(theCharacter.race.dexterityBonus).append(" to dexterity.");
+                    theCharacter.dexterity += theCharacter.race.dexterityBonus;
                 }
                 if (theCharacter.race.constitutionBonus != 0) {
                     message.append("\n").append("+").append(theCharacter.race.constitutionBonus).append(" to constitution.");
+                    theCharacter.constitution += theCharacter.race.constitutionBonus;
                 }
                 if (theCharacter.race.intelligenceBonus != 0) {
                     message.append("\n").append("+").append(theCharacter.race.intelligenceBonus).append(" to intelligence.");
+                    theCharacter.intelligence += theCharacter.race.intelligenceBonus;
                 }
                 if (theCharacter.race.wisdomBonus != 0) {
                     message.append("\n").append("+").append(theCharacter.race.wisdomBonus).append(" to wisdom.");
+                    theCharacter.wisdom += theCharacter.race.wisdomBonus;
                 }
                 if (theCharacter.race.charismaBonus != 0) {
                     message.append("\n").append("+").append(theCharacter.race.charismaBonus).append(" to charisma.");
+                    theCharacter.charisma += theCharacter.race.charismaBonus;
                 } 
-                if (theCharacter.race.strengthBonus == 0 && theCharacter.race.dexterityBonus == 0 && theCharacter.race.constitutionBonus == 0 && 
-                        theCharacter.race.intelligenceBonus == 0 && theCharacter.race.wisdomBonus == 0 && theCharacter.race.charismaBonus == 0) { 
+                if (theCharacter.race.strengthBonus == 0 && theCharacter.race.dexterityBonus == 0 && theCharacter.race.constitutionBonus == 0 
+                        && theCharacter.race.intelligenceBonus == 0 && theCharacter.race.wisdomBonus == 0 && theCharacter.race.charismaBonus == 0) { 
                             message.append("\n").append("No ability score bonuses found.");
                 }
                 System.out.print(message);
-                //TODO (Preston Bethany): Add racial ability score bonuses to totals.
-                System.out.println("\nYour ability score bonuses have been added to your base ability scores.\n");
-                System.out.print("Your total strength is " + theCharacter.strength + "\n" + "Your total dexterity is " + theCharacter.dexterity + "\n" + "Your total constitution is " +
+                
+                System.out.println("\nYour ability score bonuses have been added to your base ability scores.");
+                System.out.print("\nYour total strength is " + theCharacter.strength + "\n" + "Your total dexterity is " + theCharacter.dexterity + "\n" + "Your total constitution is " +
                 theCharacter.constitution + "\n" + "Your total intelligence is " + theCharacter.intelligence + "\n" + "Your total wisdom is " + theCharacter.wisdom + "\n" +
                 "Your total charisma is " + theCharacter.charisma + "\n");
-
-            } //if (theCharacter.race != null)
-        } //if (characterName != null)
+                
+                message.replace(0, message.length(), "\nPlease type the corresponding number from the following classes: ");
+                for (int i = 0; i < listOfClasses.size(); i++) {
+                    message.append("\n").append(i).append(" - ").append(listOfClasses.get(i).name);
+                } 
+                System.out.print(message.append("\nType here: ").toString());
+                for(;;) { 
+                    int userChoice = getIntFromUser(br);
+                    if (userChoice > -1 && userChoice < listOfClasses.size()) {
+                        theCharacter.CharacterClass = listOfClasses.get(userChoice);
+                        break;
+                    }
+                    System.out.print("\nThat was not a number associated with a class.\nType here: ");
+                } 
+                System.out.print(message);
+                System.out.print("\nThe class you chose was " + theCharacter.CharacterClass.name + ".");
+                System.out.print("\nThis is a preview of your character sheet.\n");
+                message.replace(0, message.length(),"Character name: " + theCharacter.characterName + "\nRace: " + theCharacter.race.name 
+                + "\nClass: " + theCharacter.CharacterClass.name + "\n Ability Scores\nStrength: " + theCharacter.strength + "\nDexterity: " 
+                + theCharacter.dexterity + "\nConstitution: " + theCharacter.constitution +"\nIntelligence: " + theCharacter.intelligence + "\nWisdom: " 
+                + theCharacter.wisdom + "\nCharisma: " + theCharacter.charisma);
+                System.out.print(message);
+                System.out.print("\n\nDo you want to print this character sheet to a .txt file? Y/N: ");
+                
+                for(;;) { 
+                String printResponse = getStringFromUser(br);
+                if(printResponse != null) {
+                        if(printResponse.equals("Y") || printResponse.equals("y")) {
+                            System.out.println("Searching for characters folder...");
+                            File charactersFolder = new File("./characters/");
+                            if (charactersFolder.exists() == true) {
+                                System.out.print("Characters folder found, creating file.\n");
+                                printCharacter(message, theCharacter.characterName);
+                                    break;
+                                } 
+                            if (charactersFolder.exists() == false) {
+                                System.out.println("Characters folder not found. Creating characters folder...");
+                                charactersFolder.mkdir();
+                                System.out.println("Characters folder created.");
+                                printCharacter(message, theCharacter.characterName);
+                                break;
+                            }
+                            System.out.print("You entered " + printResponse + ". That is an invalid command. Do you want to print this character sheet to a .txt file? Y/N: "); 
+                        }//end if(printResponse.equals("Y"...
+                        if (printResponse.equals("N") || printResponse.equals("n")) {
+                            System.out.println("Thank you for using my character generator. Your character has not been saved.");
+                            break;
+                        }
+                    }//end if(printResponse != null)
+                }//end of loop asking whether or not to print.
+            } //end if (theCharacter.race != null)
+        } //end if (characterName != null)
     }
 }
