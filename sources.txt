@@ -1,0 +1,5 @@
+-d .\build\
+CharacterClass.java
+CharacterGenerator.java
+CharacterInfo.java
+Race.java
