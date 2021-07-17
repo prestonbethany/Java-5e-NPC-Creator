@@ -492,6 +492,16 @@ public class CharacterGenerator {
                         }
                     }//end if(printResponse != null)
                 }//end of loop asking whether or not to print.
+                for(;;) {
+                    System.out.print("\nPress any key to exit.");
+                    String input = getStringFromUser(br);
+                    if(input != null) {
+                        break;
+                    } else {
+                        System.out.print("\nAn unexpected error has occured.\nOn Windows, press ctrl + C to terminate this console."
+                        + "\nIf you have this program, you probably know the developer. Please report this error to him.");
+                    }
+                }//end of continuation loop. Program should terminate here.
             } //end if (theCharacter.race != null)
         } //end if (characterName != null)
     }

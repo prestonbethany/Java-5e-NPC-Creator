@@ -1,2 +1,6 @@
-*.class
-/characters/*.txt
+project.ps1
+/build/
+/target/
+/installer/
+/jar/
+/tempinstaller/
