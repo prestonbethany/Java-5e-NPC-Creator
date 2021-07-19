@@ -10,7 +10,7 @@ public class CharacterGenerator {
     //
     //  This public-domain C implementation by Darel Rex Finley.
     //  Re-formatted by William Croft.
-    //  Adapted to Java by Preston Bethany.
+    //  Adapted to Java by Cain.
     //  * This function assumes it is called with valid parameters.
     //
     //  * Example calls:
@@ -79,7 +79,7 @@ public class CharacterGenerator {
             int[] myArray = new int[4];
             int sum = 0;
             for(int i = 0; i < 4; ++i) {
-                myArray[i] = (int) (1 + Math.random() * 5);
+                myArray[i] = (int) (Math.random() * 6) + 1;
             }
             quickSort(myArray);
             for(int i = 3; i > 0; --i) {
@@ -110,6 +110,45 @@ public class CharacterGenerator {
             } catch (IOException ioe) {
                 ioe.printStackTrace();
             } return "Error with input.";
+        }
+
+        public static void getRaceStats(CharacterInfo theCharacter, BufferedReader br, int statBonusTotal) {
+            for(;;) {
+                System.out.print("\nChoose from the following.\n1- Strength (currently +" + theCharacter.race.strengthBonus + ")" 
+                + "\n2- Dexterity (currently +" + theCharacter.race.dexterityBonus + ")" 
+                + "\n3- Constitution (currently +" + theCharacter.race.constitutionBonus + ")" 
+                + "\n4- Intellignece (currently +" + theCharacter.race.intelligenceBonus + ")" 
+                + "\n5- Wisdom (currently +" + theCharacter.race.wisdomBonus + ")" 
+                + "\n6- Charisma (currently +" + theCharacter.race.charismaBonus + ")");
+                System.out.print("\nType here: ");
+                int statNum = getIntFromUser(br);
+                if (statNum == 1 && theCharacter.race.strengthBonus == 0){
+                    System.out.print("\nYou have selected Strength.\n");
+                    theCharacter.race.strengthBonus = 1;
+                } else if (statNum == 2 && theCharacter.race.dexterityBonus == 0){
+                    System.out.print("\nYou have selected Dexterity.\n");
+                    theCharacter.race.dexterityBonus = 1;
+                } else if (statNum == 3 && theCharacter.race.constitutionBonus == 0){
+                    System.out.print("\nYou have selected Constitution.\n");
+                    theCharacter.race.constitutionBonus = 1;
+                } else if (statNum == 4 && theCharacter.race.intelligenceBonus == 0){
+                    System.out.print("\nYou have selected Intelligence.\n");
+                    theCharacter.race.intelligenceBonus = 1;
+                } else if (statNum == 5 && theCharacter.race.wisdomBonus == 0){
+                    System.out.print("\nYou have selected Wisdom.\n");
+                    theCharacter.race.wisdomBonus = 1;
+                } else if (statNum == 6 && theCharacter.race.charismaBonus == 0) {
+                    System.out.print("\nYou have selected Charisma.\n");
+                    theCharacter.race.charismaBonus = 1;
+                } else {
+                    System.out.print("\nThat selection is invalid. Please note that if there's already a bonus in that stat, you can't place another one in it."
+                    + "\nPlease Try again.\n");
+                } 
+                if (theCharacter.race.strengthBonus + theCharacter.race.dexterityBonus + theCharacter.race.constitutionBonus 
+                + theCharacter.race.intelligenceBonus + theCharacter.race.wisdomBonus + theCharacter.race.charismaBonus == statBonusTotal){
+                    break;
+                }
+            }
         }
 
         public static void printCharacter(StringBuilder message, String characterName) {
@@ -146,49 +185,54 @@ public class CharacterGenerator {
     private static ArrayList<Race> listOfRaces = new ArrayList<Race>();
 
     static {
-        listOfRaces.add(new Race("Aarakocra"));
-        listOfRaces.add(new Race("Aasimar"));
-        listOfRaces.add(new Race("Bugbear"));
-        listOfRaces.add(new Race("Centaur"));
-        listOfRaces.add(new Race("Changling"));
-        listOfRaces.add(new Race("Dragonborn", 2, 0, 0, 0, 0, 1, "Draconic Ancestry, Breath Weapon, Damage Resistance"));
-        listOfRaces.add(new Race("Dwarf", 0, 0, 2, 0, 0, 0, "Darkvision, Dwarven Resilience, Dwarven Combat Training, Stonecunning"));
-        listOfRaces.add(new Race("Elf", 0, 2, 0, 0, 0, 0, "Darkvision, Keen Senses, Fey Ancestry, Trance"));
-        listOfRaces.add(new Race("Feral Tiefling"));
-        listOfRaces.add(new Race("Firbolg"));
-        listOfRaces.add(new Race("Genasi"));
-        listOfRaces.add(new Race("Gith"));
-        listOfRaces.add(new Race("Gnome", 0, 0, 0, 2, 0, 0, "Darkvision, Gnome Cunning"));
-        listOfRaces.add(new Race("Goblin"));
-        listOfRaces.add(new Race("Goliath"));
-        listOfRaces.add(new Race("Grung"));
-        listOfRaces.add(new Race("Half Orc", 2, 0, 1, 0, 0, 0, "Darkvision, Menacing, Relentless Endurance, Savage Attacks"));
-        listOfRaces.add(new Race("Half Elf", 0, 0, 0, 0, 0, 2, "Darkvision, Fey Ancestry, Skill Versatility"));
-        listOfRaces.add(new Race("Halfling", 0, 2, 0, 0 , 0, 0, "Lucky, Brave, Halfling Nimbleness"));
-        listOfRaces.add(new Race("Hobgoblin"));
-        listOfRaces.add(new Race("Human", 1, 1, 1, 1, 1, 1, null));
-        listOfRaces.add(new Race("Kalashtar"));
-        listOfRaces.add(new Race("Kenku"));
-        listOfRaces.add(new Race("Kobold"));
-        listOfRaces.add(new Race("Leonin"));
-        listOfRaces.add(new Race("Lizardfolk"));
-        listOfRaces.add(new Race("Locathah"));
-        listOfRaces.add(new Race("Loxodon"));
-        listOfRaces.add(new Race("Minotaur"));
-        listOfRaces.add(new Race("Orc"));
-        listOfRaces.add(new Race("Orc Of Eberron"));
-        listOfRaces.add(new Race("Orc Of Exandria"));
-        listOfRaces.add(new Race("Satyr"));
-        listOfRaces.add(new Race("Shifter"));
-        listOfRaces.add(new Race("Simic Hybrid"));
-        listOfRaces.add(new Race("Tabaxi"));
-        listOfRaces.add(new Race("Tiefling"));
-        listOfRaces.add(new Race("Titan"));
-        listOfRaces.add(new Race("Tortle"));
-        listOfRaces.add(new Race("Vedalken"));
-        listOfRaces.add(new Race("Verdan"));
-        listOfRaces.add(new Race("Warforged"));
-        listOfRaces.add(new Race("Yuan-Ti Pureblood"));
+        //Race(String bookTag, String raceName, int strengthBonus, int dexterityBonus, int constitutionBonus,
+        //    int intelligenceBonus, int wisdomBonus, int charismaBonus, String raceTraits);
+        listOfRaces.add(new Race("EEPC", "Aarakocra", 0, 2, 0, 0, 1, 0, "Flight, Talons"));
+        listOfRaces.add(new Race("VGtM", "Aasimar", 0, 0, 0, 0, 0, 2, "Darkvision, Celestial Resistance, Healing Hands, Light Bearer"));
+        listOfRaces.add(new Race("VGtM", "Bugbear", 2, 1, 0, 0, 0, 0, "Darkvision, Long-Limbed, Powerful Build, Sneaky, Surprise Attack"));
+        listOfRaces.add(new Race("GGtR", "Centaur", 2, 0, 0, 0, 1, 0, "Fey, Charge, Hooves, Equine Build, Survivor"));
+        listOfRaces.add(new Race("ERftLW", "Changeling", 0, 0, 0, 0, 0, 2, "Shapechanger, Changeling Instincts"));
+        listOfRaces.add(new Race("PHB", "Dragonborn", 2, 0, 0, 0, 0, 1, "Draconic Ancestry, Breath Weapon, Damage Resistance"));
+        listOfRaces.add(new Race("PHB", "Dwarf", 0, 0, 2, 0, 0, 0, "Darkvision, Dwarven Resilience, Dwarven Combat Training, Stonecunning"));
+        listOfRaces.add(new Race("PHB", "Elf", 0, 2, 0, 0, 0, 0, "Darkvision, Keen Senses, Fey Ancestry, Trance"));
+        listOfRaces.add(new Race("SCAG", "Feral Tiefling", 0, 2 ,0, 1, 0, 0, "Darkvision, Hellish Resistance, Infernal Legacy"));
+        listOfRaces.add(new Race("VGtM", "Firbolg", 1, 0, 0, 0, 2, 0, "Firbolg Magic, Hidden Step, Powerful Build, Speech of Beast and Leaf"));
+        listOfRaces.add(new Race("EEPC", "Genasi (Air)", 0, 1, 2, 0, 0, 0, "Unending Breath, Mingle with the Wind"));
+        listOfRaces.add(new Race("EEPC", "Genasi (Earth)", 1, 0, 2, 0, 0, 0, "Earth Walk, Merge with Stone"));
+        listOfRaces.add(new Race("EEPC", "Genasi (Fire)", 0, 0, 2, 1, 0, 0, "Darkvision(Plane of Fire), Fire Resistance, Reach to the Blaze"));
+        listOfRaces.add(new Race("EEPC", "Genasi (Water)", 0, 0, 2, 0, 1, 0, "Acid Resistance, Amphibious, Swim, Call to the Wave"));
+        listOfRaces.add(new Race("MToF", "Gith", 0, 0, 0, 1, 0, 0, "Githyanki or Githzerai Traits"));
+        listOfRaces.add(new Race("PHB", "Gnome", 0, 0, 0, 2, 0, 0, "Darkvision, Gnome Cunning"));
+        listOfRaces.add(new Race("VGtM", "Goblin", 0, 2, 1, 0, 0, 0, "Darkvision, Fury of the Small, Nimble Escape"));
+        listOfRaces.add(new Race("EEPC", "Goliath", 2, 0, 1, 0, 0, 0, "Natural Athlete, Stone's Endurance, Powerful Build, Mountain Born"));
+        listOfRaces.add(new Race("OGA", "Grung", 0, 2, 1, 0, 0, 0, "Arboreal Alertness, Amphibious, Poison Immunity, Poisonous Skin, Alertness, Standing Leap, Water Dependency"));
+        listOfRaces.add(new Race("PHB", "Half-Elf", 0, 0, 0, 0, 0, 2, "Darkvision, Fey Ancestry, Skill Versatility"));
+        listOfRaces.add(new Race("PHB", "Halfling", 0, 2, 0, 0 , 0, 0, "Lucky, Brave, Halfling Nimbleness"));
+        listOfRaces.add(new Race("PHB", "Half-Orc", 2, 0, 1, 0, 0, 0, "Darkvision, Menacing, Relentless Endurance, Savage Attacks"));
+        listOfRaces.add(new Race("VGtM", "Hobgoblin", 0, 0, 2, 1, 0, 0, "Darkvision, Martial Training, Saving Face"));
+        listOfRaces.add(new Race("PHB", "Human", 1, 1, 1, 1, 1, 1, "Extra Language"));
+        listOfRaces.add(new Race("ERftLW", "Kalashtar", 0, 0, 0, 0, 2, 1, "Dual Mind, Mental Discipline, Mind Link, Severed from Dreams"));
+        listOfRaces.add(new Race("VGtM", "Kenku", 0, 2, 0, 0, 0, 0, "Expert Forging, Kenku Training, Mimicry"));
+        listOfRaces.add(new Race("VGtM", "Kobold", 0, 2, 0, 0, 0, 0, "Darkvision, Pack Tactics, Sunlight Sensitivity, Grovel, Cower, and Beg"));
+        listOfRaces.add(new Race("MOoT", "Leonin", 1, 0, 2, 0, 0, 0, "Darkvision, Claws, Hunter's Instincts, Daunting Roar"));
+        listOfRaces.add(new Race("VGtM", "Lizardfolk", 0, 0, 2, 0, 1, 0, "Bite, Cunning Artisan, Hold Breath, Hunter's Lore, Natural Armor, Hungry Jaws"));
+        listOfRaces.add(new Race("LR", "Locathah", 2, 1, 0, 0, 0, 0, "Natural Armor, Observant & Athletic, Leviathan Will, Limited Amphibiousness"));
+        listOfRaces.add(new Race("GGtR", "Loxodon", 0, 0, 2, 0, 1, 0, "Powerful Build, Loxodon Serenity, Natural Armor, Trunk, Keen Smell"));
+        listOfRaces.add(new Race("GGtR", "Minotaur", 2, 0, 1, 0, 0, 0, "Horns, Goring Rush, Hammering Horns, Imposing Presence"));
+        listOfRaces.add(new Race("VGtM", "Orc", 2, 0, 1, 0, 0, 0, "Darkvision, Aggressive, Primal Intuition, Powerful Build"));
+        listOfRaces.add(new Race("ERftLW", "Orc Of Eberron", 2, 0, 1, 0, 0, 0, "Darkvision, Aggressive, Powerful Build, Primal Intuition"));
+        listOfRaces.add(new Race("EGtW", "Orc Of Exandria", 2, 0, 1, 0, 0, 0, "Darkvision, Aggressive, Powerful Build, Primal Intuition"));
+        listOfRaces.add(new Race("MOoT", "Satyr", 0, 1, 0, 0, 0, 2, "Fey, Ram, Magic Resistance, Mirthful Leaps, Reveler"));
+        listOfRaces.add(new Race("ERftLW", "Shifter", 0, 0, 0, 0, 0, 0, "Darkvision, Shifting"));
+        listOfRaces.add(new Race("GGtR", "Simic Hybrid", 0, 0, 2, 0, 0, 0, "Darkvision, Animal Enhancement"));
+        listOfRaces.add(new Race("VGtM", "Tabaxi", 0, 2, 0, 0, 0, 1, "Darkvision, Feline Agility, Cat's Claws, Cat's Talent"));
+        listOfRaces.add(new Race("PHB", "Tiefling", 0, 0, 0, 1, 0, 2, "Darkvision, Hellish Resistance, Infernal Legacy"));
+        listOfRaces.add(new Race("VGtM", "Triton", 1, 0, 1, 0, 0, 1,"Amphibious, Control Air and Water, Emissary of the Sea, Guardian of the Depths"));
+        listOfRaces.add(new Race("TTP", "Tortle", 2, 0, 0, 0, 1, 0, "Claws, Hold Breath, Natural Armor, Shell Defense, Survival Instinct"));
+        listOfRaces.add(new Race("GGtR", "Vedalken", 0, 0, 0, 2, 1, 0, "Vedalken Dispassion, Tireless Precision, Partially Amphibious"));
+        listOfRaces.add(new Race("AI", "Verdan", 0, 0, 1, 0, 0, 2, "Black Blood Healing, Limited Telepathy, Persuasive, Telepathic Insight"));
+        listOfRaces.add(new Race("ERftLW", "Warforged", 0, 0, 2, 0, 0, 0, "Constructed Resilience, Sentry's Rest, Integrated Protection, Specialized Design"));
+        listOfRaces.add(new Race("VGtM", "Yuan-Ti Pureblood", 0, 0, 0, 1, 0, 2, "Dakvision, Innate Spellcasting, Magic Resistance, Poison Immunity"));
     }
 
     private static ArrayList<CharacterClass> listOfClasses = new ArrayList<CharacterClass>();
@@ -229,9 +273,9 @@ public class CharacterGenerator {
             coreStats[5] = statRoller();
             quickSort(coreStats);
 
-            System.out.print("Your first roll is " + coreStats[0] + "\n" + "Your second roll is " + coreStats[1] + "\n" + "Your third roll is " +
-                    coreStats[2] + "\n" + "Your fourth roll is " + coreStats[3] + "\n" + "Your fifth roll is " + coreStats[4] + "\n" +
-                    "Your sixth roll is " + coreStats[5] + "\n Please prioritize your stats by entering a number \"1\" through \"6\" in the following fields.\nStrength priority: ");
+            System.out.print("Your first roll is " + coreStats[5] + "\n" + "Your second roll is " + coreStats[4] + "\n" + "Your third roll is " +
+                    coreStats[3] + "\n" + "Your fourth roll is " + coreStats[2] + "\n" + "Your fifth roll is " + coreStats[1] + "\n" +
+                    "Your sixth roll is " + coreStats[0] + "\n Please prioritize your stats by entering a number \"1\" through \"6\" in the following fields.\nStrength priority: ");
 
             for(;;) {
                 int strengthInput = 0;
@@ -363,7 +407,7 @@ public class CharacterGenerator {
             System.out.print("Your strength is " + theCharacter.strength + "\nYour dexterity is " + theCharacter.dexterity + "\nYour constitution is " + theCharacter.constitution +
             "\nYour intelligence is " + theCharacter.intelligence + "\nYour wisdom is " + theCharacter.wisdom +  "\nYour charisma is " + theCharacter.charisma);
 
-            StringBuilder message = new StringBuilder("\nPlease type the corresponding number from the following races (Full support currently only for PHB races): ");
+            StringBuilder message = new StringBuilder("\nPlease type the corresponding number from the following races (Full support only for SRD materials): ");
             for (int i = 0; i < listOfRaces.size(); i++) {
                 message.append("\n").append(i).append(" - ").append(listOfRaces.get(i).name);
             } 
@@ -378,35 +422,21 @@ public class CharacterGenerator {
             }
 
             if (theCharacter.race != null) {
-                if (theCharacter.race.name == "Half Elf") {
-                    System.out.print("\nHalf elves get 2 separate floating stat bonuses of + 1.\nWhere would you like to place them?\n1- Strength\n2- Dexterity"
-                    + "\n3- Constitution\n4- Intelligence\n5- Wisdom\n6- Charisma\n");
-                    for(;;) {
-                        System.out.print("Type here: ");
-                        int statNum = getIntFromUser(br);
-                        if(statNum == 1 && theCharacter.race.strengthBonus != 1){
-                            System.out.print("You have selected Strength. Please pick one more stat or hit enter.\n");
-                            theCharacter.race.strengthBonus = 1;
-                        } else if(statNum == 2 && theCharacter.race.dexterityBonus != 1){
-                            System.out.print("You have selected Dexterity. Please pick one more stat or hit enter.\n");
-                            theCharacter.race.dexterityBonus = 1;
-                        } else if(statNum == 3 && theCharacter.race.constitutionBonus != 1){
-                            System.out.print("You have selected Constitution. Please pick one more stat or hit enter.\n");
-                            theCharacter.race.constitutionBonus = 1;
-                        } else if(statNum == 4 && theCharacter.race.intelligenceBonus != 1){
-                            System.out.print("You have selected Intelligence. Please pick one more stat or hit enter. \n");
-                            theCharacter.race.intelligenceBonus = 1;
-                        } else if(statNum == 5 && theCharacter.race.wisdomBonus != 1){
-                            System.out.print("You have selected Wisdom. Please pick one more stat or hit enter.\n");
-                            theCharacter.race.wisdomBonus = 1;
-                        } else {
-                            System.out.print("That selection is invalid. Please Try again.\n");
-                        }
-                        if(theCharacter.race.strengthBonus + theCharacter.race.dexterityBonus + theCharacter.race.constitutionBonus + theCharacter.race.intelligenceBonus + theCharacter.race.wisdomBonus == 2){
-                            break;
-                        }
-                    }//end of loop to set stat bonuses.
-                }//end if (theCharacter.race.name == "Half Elf")
+                if (theCharacter.race.name == "Half-Elf") {
+                    System.out.print("\nHalf-elves get two floating stat bonuses of +1 on two stats without an existing racial bonus."
+                    + "\nWhere would you like to place them?");
+                    getRaceStats(theCharacter, br, 4);
+                }
+                if (theCharacter.race.name == "Simic Hybrid") {
+                    System.out.print("\nSimic Hybrids get a floating stat bonus of +1 on any stat without an existing racial bonus."
+                    +"\nSimic Hybrids start with a racial bonus of +2 Constitution.\n");
+                   getRaceStats(theCharacter, br, 3);
+                }
+                if (theCharacter.race.name == "Warforged"){
+                    System.out.print("\nWarforged get a floating stat bonus of +1 on any stat without an existing racial bonus."
+                    +"\nWarforged start with a racial bonus of +2 Constitution.\n");
+                   getRaceStats(theCharacter, br, 3);
+                }//end floating bonus checking
                 message.replace(0, message.length(), "The race " + theCharacter.race.name + " gains the following ability score bonuses.");
                 if (theCharacter.race.strengthBonus != 0) {
                     message.append("\n").append("+").append(theCharacter.race.strengthBonus).append(" to strength.");
@@ -464,7 +494,7 @@ public class CharacterGenerator {
                 + theCharacter.dexterity + "\nConstitution: " + theCharacter.constitution +"\nIntelligence: " + theCharacter.intelligence + "\nWisdom: " 
                 + theCharacter.wisdom + "\nCharisma: " + theCharacter.charisma);
                 System.out.print(message);
-                System.out.print("\n\nDo you want to print this character sheet to a .txt file? Y/N: ");
+                System.out.print("\n\nDo you want to save this character sheet to a .txt file? Y/N: ");
                 
                 for(;;) { 
                 String printResponse = getStringFromUser(br);
@@ -493,7 +523,7 @@ public class CharacterGenerator {
                     }//end if(printResponse != null)
                 }//end of loop asking whether or not to print.
                 for(;;) {
-                    System.out.print("\nPress any key to exit.");
+                    System.out.print("\nPress enter to exit.");
                     String input = getStringFromUser(br);
                     if(input != null) {
                         break;

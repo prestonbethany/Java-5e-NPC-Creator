@@ -1,6 +1,7 @@
 // I don't want to abuse the processor to set and call data that doesn't need to be sanitized.
 // Because these values are merely pass-throughs, they are all public.
 public class Race {
+    public String bookTag;
     public String name;
     public int strengthBonus = 0;
     public int dexterityBonus = 0;
@@ -16,8 +17,9 @@ public class Race {
         this.name = raceName;
     }
 
-    public Race(String raceName, int strengthBonus, int dexterityBonus, int constitutionBonus,
+    public Race(String bookTag, String raceName, int strengthBonus, int dexterityBonus, int constitutionBonus,
             int intelligenceBonus, int wisdomBonus, int charismaBonus, String raceTraits) {
+        this.bookTag = bookTag;
         this.name = raceName;
         this.strengthBonus = strengthBonus;
         this.dexterityBonus = dexterityBonus;
